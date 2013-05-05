@@ -20,7 +20,7 @@ public class Pullout extends Actor {
 	};
 	
 	private Location loc;
-	private int locMod = 1;
+	private int locMod = -1;
 	private int w, h;
 	private TextureRegion corner1R, corner2R, edge1R, edge2R, edge3R, middleR;
 	private TextureRegionDrawable tabR;
@@ -73,9 +73,16 @@ public class Pullout extends Actor {
 		//wrapper.setHeight(tabR.getTopHeight());
 		//wrapper.setWidth(tab.getWidth());
 		wrapper.setTransform(true);
-		wrapper.setOrigin(0, wrapper.getPrefHeight()/4);
+		wrapper.setOrigin(0, 0);
 		if(loc.equals(Location.bottom)) { 
 			wrapper.setRotation(180);
+			locMod = 1;
+		}else if(loc.equals(Location.left)) { 
+			wrapper.setRotation(90);
+			locMod = 1;
+		}
+		else if(loc.equals(Location.right)) { 
+			wrapper.setRotation(-90);
 			locMod = -1;
 		}
 	}
@@ -86,28 +93,33 @@ public class Pullout extends Actor {
 	
 	public void act(float delta) {
 		super.act(delta);
-		wrapper.setPosition(getStage().getWidth()/2, getY() + (locMod *wrapper.getPrefHeight()/2));
+		if(loc.equals(Location.top) || loc.equals(Location.bottom)) {
+			wrapper.setPosition(getStage().getWidth()/2, getY()+(locMod*16));
+		}else if(loc.equals(Location.left)|| loc.equals(Location.right) ) { 
+			wrapper.setPosition(getX()+(locMod*16), getStage().getHeight()/2);
+		}
 	}
 	
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		if(loc.equals(Location.top)) { drawTop(batch, parentAlpha); }
 		if(loc.equals(Location.bottom)) { drawBottom(batch, parentAlpha); }
+		if(loc.equals(Location.left)) { drawLeft(batch, parentAlpha); }
 	}
 	
 	protected void drawTop(SpriteBatch batch, float parentAlpha) {
-		batch.draw(corner1R, getX(), getY() + tab.getHeight());
-		batch.draw(corner2R, getX() + w-16, getY() + tab.getHeight());
+		batch.draw(corner1R, getX(), getY());
+		batch.draw(corner2R, getX() + w-16, getY());
 		for(int y = 0; y < h-16; y+=16) {
 			for(int x = 0; x < w; x+=16) {
 				if(y == 0) {
-					batch.draw(edge2R, getX() + (x+16), getY() + (y + tab.getHeight()));
+					batch.draw(edge2R, getX() + (x+16), getY() + y);
 				}else if(y != 0) {
 					if(x == 0) {
-						batch.draw(edge1R, getX() + x, getY() + (y + tab.getHeight()));
+						batch.draw(edge1R, getX() + x, getY() + y);
 					}else if(x == w-16) {
-						batch.draw(edge3R, getX() + x, getY() + (y + tab.getHeight()));
+						batch.draw(edge3R, getX() + x, getY() + y);
 					}else {
-						batch.draw(middleR, getX() + x, getY() + (y + tab.getHeight()));
+						batch.draw(middleR, getX() + x, getY() + y);
 					}
 				}
 				if(y == 0 && x == w-48) break;
@@ -116,19 +128,19 @@ public class Pullout extends Actor {
 		wrapper.draw(batch, parentAlpha);
 	}
 	protected void drawBottom(SpriteBatch batch, float parentAlpha) {
-		batch.draw(corner1R, getX(), getY() - tab.getHeight());
-		batch.draw(corner2R, getX() + w-16, getY() - tab.getHeight());
-		for(int y = 0; y < h-16; y+=16) {
+		batch.draw(corner1R, getX(), getY()-16);
+		batch.draw(corner2R, getX() + w-16, getY()-16);
+		for(int y = 0; y < h; y+=16) {
 			for(int x = 0; x < w; x+=16) {
 				if(y == 0) {
-					batch.draw(edge2R, getX() + (x+16), getY() - (y + tab.getHeight()));
+					batch.draw(edge2R, getX() + (x+16), (getY()-16) - y);
 				}else if(y != 0) {
 					if(x == 0) {
-						batch.draw(edge1R, getX() + x, getY() - (y + tab.getHeight()));
+						batch.draw(edge1R, getX() + x, (getY()-16) - y);
 					}else if(x == w-16) {
-						batch.draw(edge3R, getX() + x, getY() - (y + tab.getHeight()));
+						batch.draw(edge3R, getX() + x, (getY()-16) - y);
 					}else {
-						batch.draw(middleR, getX() + x, getY() - (y + tab.getHeight()));
+						batch.draw(middleR, getX() + x, (getY()-16) - y);
 					}
 				}
 				if(y == 0 && x == w-48) break;
@@ -138,28 +150,45 @@ public class Pullout extends Actor {
 			
 	}
 	protected void drawLeft(SpriteBatch batch, float parentAlpha) {
-		batch.draw(corner1R, (getX()+ w-16) - tab.getWidth(), getY() + h-16);
-		batch.draw(corner2R, (getX() + w-16) - tab.getWidth(), getY());
-		for(int y = 0; y < h - 16; y+=16) {
-			for(int x = 0; x < (y==0?w-16:w); x+=16) {
+		batch.draw(corner1R, getX() - 16, getY() + (h-16));
+		batch.draw(corner2R, getX() - 16, getY());
+		for(int y = 0; y < h; y+=16) {
+			for(int x = 0; x < w-16; x+=16) {
 				if(y == 0) {
-					batch.draw(edge3R, getX() + x, getY() + y);
-				}else if(y != 0) {
+					batch.draw(edge3R, (getX()-16) - (x+16), getY() + y);
+				}else if( y == h-16 ) {
+					batch.draw(edge1R, (getX()-16) - (x+16), getY() + y);
+				}else if(y != 0 && y != (h-16)) {
 					if(x == 0) {
-						batch.draw(edge1R, getX() + x, getY() + (y + tab.getHeight()));
-					}else if(x == w-16) {
-						batch.draw(edge3R, getX() + x, getY() + (y + tab.getHeight()));
+						batch.draw(edge2R, (getX()-16) - x, getY() + y);
+						batch.draw(middleR, (getX()-16) - (x+16), getY() + y);
 					}else {
-						batch.draw(middleR, getX() + x, getY() + (y + tab.getHeight()));
+						batch.draw(middleR, (getX()-16) - (x+16), getY() + y);
 					}
 				}
-				if(y == 0 && x == w-48) break;
 			}
 		}
 		wrapper.draw(batch, parentAlpha);
 	}
-	protected void drawRight() {
-		
+	protected void drawRight(SpriteBatch batch, float parentAlpha) {
+		batch.draw(corner1R, getX() - 16, getY() + h-16);
+		batch.draw(corner2R, getX() - 16, getY());
+		for(int y = 0; y < h; y+=16) {
+			for(int x = 0; x < ((y==0||y==(h-16))?w-32:w); x+=16) {
+				if(y == 0) {
+					batch.draw(edge3R, (getX()-16) - (x+16), getY() + y);
+				}else if( y == h-16 ) {
+					batch.draw(edge1R, (getX()-16) - (x+16), getY() + y);
+				}else if(y != 0 && y != (h-16)) {
+					if(x == 0) {
+						batch.draw(edge2R, (getX()-16) - x, getY() + y);
+					}else {
+						batch.draw(middleR, (getX()-16) - x, getY() + y);
+					}
+				}
+			}
+		}
+		wrapper.draw(batch, parentAlpha);
 	}
 	
 }

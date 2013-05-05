@@ -11,7 +11,7 @@ import com.ravine.runebind.board.Pullout;
 public class GameScreen extends AbstractScreen {
 	
 	private GameBoard board;
-	private Pullout topPullout, bottomPullout;
+	private Pullout topPullout, bottomPullout, leftPullout, rightPullout;
 	//private BoardController boardController;
 	//private InputMultiplexer inputM;
 	
@@ -53,7 +53,8 @@ public class GameScreen extends AbstractScreen {
 		});
 		//Gdx.input.setInputProcessor(defaultControl);
 		topPullout = new Pullout(Pullout.Location.top, 800, 400, 0, 500);
-		bottomPullout = new Pullout(Pullout.Location.bottom, 800, 400, 0, 100);
+		bottomPullout = new Pullout(Pullout.Location.bottom, 800, 400, 0, 0);
+		leftPullout = new Pullout(Pullout.Location.left, 400, 800, 0, -100);
 	}
 	
 	public GameBoard getBoard() { return board; }
@@ -64,6 +65,7 @@ public class GameScreen extends AbstractScreen {
 		stage.addActor(board);	
 		stage.addActor(topPullout);
 		stage.addActor(bottomPullout);
+		stage.addActor(leftPullout);
 	}
 	
 	@Override
