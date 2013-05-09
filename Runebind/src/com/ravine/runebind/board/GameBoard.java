@@ -28,8 +28,40 @@ public class GameBoard extends Group{
 		velX = 0.0f;
 		velY = 0.0f;
 		
+		this.addCaptureListener(new ActorGestureListener(20, 0.4f, 1.1f, 0.0005f) {
+			@Override
+			public void zoom(InputEvent event, float initialDistance, float distance) {
+				float ratio = distance/initialDistance;
+				if((getWidth()*ratio >= getStage().getWidth()) && 
+						(getHeight()*ratio) >= getStage().getHeight()) {
+					if(!(Math.abs(getScaleX()-ratio) > 0.5))
+						setScale(ratio);
+				}
+				
+				Gdx.app.log(RuneBind.LOG, "ratio:" + getScaleX());
+			}
+			@Override
+			public void touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				flinging = false;
+			}
+			@Override
+			public void fling(InputEvent event, float velocityX, float velocityY, int button) {
+				if(Math.abs(velocityX) > 50.0f || Math.abs(velocityY) > 50.0f) {
+					flinging = true;
+					velX = velocityX;
+					velY = velocityY;
+					Gdx.app.log(RuneBind.LOG, "velX: " + velX + ", velY: " + velY);
+				}
+			}
+			@Override
+			public void pan(InputEvent event, float x, float y, float deltaX, float deltaY) {
+				translate(deltaX, deltaY);
+				checkBounds();
+			}
+		});
 		tiles = new BoardTile[lines.length*lines[0].length()];
 		int curLevel = 0, offset = 0;
+		
 		
 		for(int x = 0; x < lines.length; x++) {
 			String curLine = lines[x];
@@ -76,44 +108,6 @@ public class GameBoard extends Group{
 		setWidth(width+96);
 		setHeight(height+96);
 		Gdx.app.log(RuneBind.LOG, "width: " + getWidth() + ", height: " + getHeight());
-		this.addListener(new ActorGestureListener(20, 0.4f, 1.1f, 0.0005f) {
-			@Override
-			public boolean longPress(Actor actor, float x, float y) {
-				return false;
-			}
-			@Override
-			public void zoom(InputEvent event, float initialDistance, float distance) {
-				float ratio = distance/initialDistance;
-				if((getWidth()*ratio >= getStage().getWidth()) && 
-						(getHeight()*ratio) >= getStage().getHeight()) {
-					setScale(ratio);
-				}
-				event.handle();
-				
-				Gdx.app.log(RuneBind.LOG, "ratio:" + getScaleX());
-			}
-			@Override
-			public void touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				flinging = false;
-				event.handle();
-			}
-			@Override
-			public void fling(InputEvent event, float velocityX, float velocityY, int button) {
-				if(Math.abs(velocityX) > 50.0f || Math.abs(velocityY) > 50.0f) {
-					flinging = true;
-					velX = velocityX;
-					velY = velocityY;
-					Gdx.app.log(RuneBind.LOG, "velX: " + velX + ", velY: " + velY);
-					event.handle();
-				}
-			}
-			@Override
-			public void pan(InputEvent event, float x, float y, float deltaX, float deltaY) {
-				translate(deltaX, deltaY);
-				checkBounds();
-				event.handle();
-			}
-		});
 	}
 	
 	private void checkBounds() {

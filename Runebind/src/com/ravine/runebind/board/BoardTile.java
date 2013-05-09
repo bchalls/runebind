@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.color;
@@ -15,6 +17,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.forever;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.ravine.runebind.RuneBind;
 
@@ -36,6 +39,7 @@ public class BoardTile extends Actor {
 	private TileType type;
 	private boolean hasAdventure, adventureDone;
 	private int adventureLevel;
+	private Polygon hex;
 	
 	public BoardTile(TileType type, float x, float y, int advLevel)
 	{
@@ -49,6 +53,16 @@ public class BoardTile extends Actor {
 		hasAdventure = adventureLevel>0 ? true:false;
 		adventureDone = false;
 		
+		//Vector2[] vecList = {new Vector2(0f,24f),new Vector2(0f,72f),new Vector2(48f,96f),
+		//		new Vector2(96f,72f),new Vector2(96f,24f),new Vector2(48f,0f)}; 
+		
+		hex = new Polygon(new float[]{0f,24f,
+				0f,72f,
+				48f,96f,
+				96f,72f,
+				96f,24f,
+				48f,0f,
+				0f, 24f});
 		
 		Texture terTex = new Texture(Gdx.files.internal("data/HexTerrain.png"));
 		Texture hexTex = new Texture(Gdx.files.internal("data/Hex.png"));
@@ -61,7 +75,6 @@ public class BoardTile extends Actor {
 			Texture advTokenTex = new Texture(Gdx.files.internal("data/AdventureCounters.png"));
 			adventureRegion = new TextureRegion(advTokenTex, 64*(adventureLevel-1), 0, 64, 64);
 		}
-		
 		
 		this.setBounds(x, y, 96, 96);
 		switch(this.type)
@@ -95,7 +108,7 @@ public class BoardTile extends Actor {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				Gdx.app.log(RuneBind.LOG, "Tile down");
-				hexRegion = hexRLight;				
+				hexRegion = hexRLight;	
 				return true;
 			}
 			@Override
@@ -107,6 +120,12 @@ public class BoardTile extends Actor {
 		});
 	}
 
+	@Override
+	public Actor hit(float x, float y, boolean touchable) {
+		if (touchable && this.getTouchable() != Touchable.enabled) return null;
+		return hex.contains(x, y)?this:null;
+	}
+	
 	public boolean getHasAdventure() { return (hasAdventure && !adventureDone); } 
 	
 	public void draw(SpriteBatch batch, float parentAlpha) {

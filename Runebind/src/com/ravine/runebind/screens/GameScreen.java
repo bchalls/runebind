@@ -52,9 +52,10 @@ public class GameScreen extends AbstractScreen {
 			}
 		});
 		//Gdx.input.setInputProcessor(defaultControl);
-		topPullout = new Pullout(Pullout.Location.top, 800, 400, 0, 500);
-		bottomPullout = new Pullout(Pullout.Location.bottom, 800, 400, 0, 0);
-		leftPullout = new Pullout(Pullout.Location.left, 400, 800, 0, -100);
+		topPullout = new Pullout(Pullout.Location.top, 800, 400, 0, stage.getHeight());
+		bottomPullout = new Pullout(Pullout.Location.bottom, 800, 400, 0, -400);
+		leftPullout = new Pullout(Pullout.Location.left, 400, 576, -400, 0);
+		rightPullout = new Pullout(Pullout.Location.right, 400, 576, stage.getWidth(), 12);
 	}
 	
 	public GameBoard getBoard() { return board; }
@@ -66,10 +67,16 @@ public class GameScreen extends AbstractScreen {
 		stage.addActor(topPullout);
 		stage.addActor(bottomPullout);
 		stage.addActor(leftPullout);
+		stage.addActor(rightPullout);
+		topPullout.addToStage();
+		bottomPullout.addToStage();
+		leftPullout.addToStage();
+		rightPullout.addToStage();
 	}
-	
 	@Override
 	public void resize(int width, int height) {
-			
+		super.resize(width, height);
+		//topPullout.setY(stage.getCamera().viewportHeight);
+		//rightPullout.setX(stage.getWidth());
 	}
 }

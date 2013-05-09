@@ -31,7 +31,7 @@ public abstract class AbstractScreen implements Screen {
 	public AbstractScreen(RuneBind game) {
 		this.game = game;
 		viewport = new Rectangle(0, 0, vWidth, vHeight);
-		this.stage = new Stage(STAGE_WIDTH, STAGE_HEIGHT, true);
+		this.stage = new Stage(800, 600, true);
 		Gdx.input.setInputProcessor(stage);
 	}
 	
@@ -45,7 +45,7 @@ public abstract class AbstractScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		stage.setViewport(viewport.width*zoom, viewport.height*zoom, true);
+		//stage.setViewport(viewport.width, viewport.height, true);
 		
 				
 		stage.draw();
@@ -54,7 +54,28 @@ public abstract class AbstractScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+		float aspectRatio = (float)width/(float)height;
+        float scale = 1f;
+        Vector2 crop = new Vector2(0f, 0f);
+        
+        if(aspectRatio > vAspect)
+        {
+            scale = (float)height/(float)vHeight;
+            crop.x = (width - vWidth*scale)/2f;
+        }
+        else if(aspectRatio < vAspect)
+        {
+            scale = (float)width/(float)vWidth;
+            crop.y = (height - vHeight*scale)/2f;
+        }
+        else
+        {
+            scale = (float)width/(float)vWidth;
+        }
+
+        float w = (float)vWidth*scale;
+        float h = (float)vHeight*scale;
+        viewport = new Rectangle(0, 0, w, h);
 	}
 
 	@Override
