@@ -1,24 +1,15 @@
 package com.ravine.runebind.board;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.color;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.forever;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.ravine.runebind.RuneBind;
 
 public class BoardTile extends Actor {
@@ -40,8 +31,11 @@ public class BoardTile extends Actor {
 	private boolean hasAdventure, adventureDone;
 	private int adventureLevel;
 	private Polygon hex;
+	private int posX, posY;
+	private BoardTile[] neighbors;
+	private boolean lite;
 	
-	public BoardTile(TileType type, float x, float y, int advLevel)
+	public BoardTile(TileType type, float x, float y, int advLevel, int pX, int pY)
 	{
 		super();
 		this.type = type;
@@ -52,6 +46,11 @@ public class BoardTile extends Actor {
 		adventureLevel = advLevel;
 		hasAdventure = adventureLevel>0 ? true:false;
 		adventureDone = false;
+		lite = false;
+		neighbors = new BoardTile[0];
+		
+		posX = pX;
+		posY = pY;
 		
 		//Vector2[] vecList = {new Vector2(0f,24f),new Vector2(0f,72f),new Vector2(48f,96f),
 		//		new Vector2(96f,72f),new Vector2(96f,24f),new Vector2(48f,0f)}; 
@@ -107,14 +106,27 @@ public class BoardTile extends Actor {
 		this.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				Gdx.app.log(RuneBind.LOG, "Tile down");
-				hexRegion = hexRLight;	
-				return true;
+				if(pointer == 0) {
+					Gdx.app.log(RuneBind.LOG, "Tile down. pX: " + posX + ", pY: " + posY);
+					toggleLight();
+					for(int i = 0; i < neighbors.length; i++) {
+						if(neighbors[i] != null) {
+							neighbors[i].toggleLight();
+						}
+					}
+					return true;
+				}
+				return false;
 			}
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				Gdx.app.log(RuneBind.LOG, "Tile Up");
-				hexRegion = hexRDark;				
+				toggleLight();	
+				for(int i = 0; i < neighbors.length; i++) {
+					if(neighbors[i] != null) {
+						neighbors[i].toggleLight();
+					}
+				}
 			}
 			
 		});
@@ -125,6 +137,25 @@ public class BoardTile extends Actor {
 		if (touchable && this.getTouchable() != Touchable.enabled) return null;
 		return hex.contains(x, y)?this:null;
 	}
+	
+	/*
+	 * Sets tile's neighbors from 0-5. Starting from left and moving clockwise
+	 */
+	public void setNeighbors(BoardTile[] neighbors) {
+		this.neighbors = neighbors;
+	}
+	
+	public void toggleLight() {
+		if(lite) {
+			hexRegion = hexRDark;
+		} else {
+			hexRegion = hexRLight;
+		}
+		lite = !lite;
+	}
+	
+	public int getPosX() { return posX; }
+	public int getPosY() { return posY; }
 	
 	public boolean getHasAdventure() { return (hasAdventure && !adventureDone); } 
 	

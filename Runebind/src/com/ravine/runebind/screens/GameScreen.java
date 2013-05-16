@@ -5,19 +5,25 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.ravine.runebind.RuneBind;
-import com.ravine.runebind.board.GameBoard;
-import com.ravine.runebind.board.Pullout;
+import com.ravine.runebind.board.*;
+import com.ravine.runebind.cards.ItemCard;
 
-public class GameScreen extends AbstractScreen {
+public final class GameScreen extends AbstractScreen {
 	
 	private GameBoard board;
-	private Pullout topPullout, bottomPullout, leftPullout, rightPullout;
+	private PlayerTab playerTab;
+	private MarketTab marketTab;
+	private AdventureTab adventureTab;
+	private QuestTab questTab;
+	private ItemCard testCard;
 	//private BoardController boardController;
 	//private InputMultiplexer inputM;
+
 	
 	public GameScreen(RuneBind game) {
 		super(game);
 		board = new GameBoard("data/Map.txt");
+		testCard = new ItemCard(0);
 		//boardController = new BoardController(board);
 		stage.addListener(new InputListener() {
 			@Override
@@ -43,6 +49,9 @@ public class GameScreen extends AbstractScreen {
 					board.setScale(board.getScaleX()-0.1f, board.getScaleY()-0.1f);
 					Gdx.app.log(RuneBind.LOG, "zoom++");
 				}
+				if(keycode == Input.Keys.F) {
+					testCard.flipCard();
+				}
 				if(keycode == Input.Keys.Z && zoom < 3.0) {
 					//zoom += .1f;
 					board.setScale(board.getScaleX()+0.1f, board.getScaleY()+0.1f);
@@ -52,10 +61,10 @@ public class GameScreen extends AbstractScreen {
 			}
 		});
 		//Gdx.input.setInputProcessor(defaultControl);
-		topPullout = new Pullout(Pullout.Location.top, 800, 400, 0, stage.getHeight());
-		bottomPullout = new Pullout(Pullout.Location.bottom, 800, 400, 0, -400);
-		leftPullout = new Pullout(Pullout.Location.left, 400, 576, -400, 0);
-		rightPullout = new Pullout(Pullout.Location.right, 400, 576, stage.getWidth(), 12);
+		adventureTab = new AdventureTab(0, stage.getHeight());
+		playerTab = new PlayerTab(0, 0);
+		marketTab = new MarketTab(0, 0);
+		questTab = new QuestTab(stage.getWidth(), 0);
 	}
 	
 	public GameBoard getBoard() { return board; }
@@ -64,14 +73,15 @@ public class GameScreen extends AbstractScreen {
 	public void show() {
 		super.show();
 		stage.addActor(board);	
-		stage.addActor(topPullout);
-		stage.addActor(bottomPullout);
-		stage.addActor(leftPullout);
-		stage.addActor(rightPullout);
-		topPullout.addToStage();
-		bottomPullout.addToStage();
-		leftPullout.addToStage();
-		rightPullout.addToStage();
+		stage.addActor(adventureTab);
+		stage.addActor(playerTab);
+		stage.addActor(marketTab);
+		stage.addActor(questTab);
+		stage.addActor(testCard);
+		adventureTab.addToStage();
+		playerTab.addToStage();
+		marketTab.addToStage();
+		questTab.addToStage();
 	}
 	@Override
 	public void resize(int width, int height) {

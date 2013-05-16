@@ -1,11 +1,16 @@
 package com.ravine.runebind.cards;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Card extends Actor {
@@ -30,27 +35,33 @@ public class Card extends Actor {
 	protected String cardText;
 	protected Face face;
 	protected Vector2[] textTargets;
+	private float initScaleX;
 	
-	public Card(Type type, int x, int y, int imageX, int imageY, String text) {
+	public Card(Type type, int x, int y, String text) {
 		this.type = type;
 		face = Face.back;
 		setX(x);
 		setY(y);
 		font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		Texture tex = new Texture(Gdx.files.internal("data/MarketCardBack.png"));
-		if(type.equals(Type.item) || type.equals(Type.ally)) {
-			cardBackR = new TextureRegion(tex, 0, 0, 322, 500);
-		}
 		staticText = new BitmapFontCache(font);
-		staticText.addMultiLineText(text, x, y);
-		
-		
+		cardText = text;
+		initScaleX = getScaleX();
 	}
 	
 	public Face getFace() { return face; }
-	public void flipImage() { if(face.equals(Face.front)) { face = Face.back; } else { face = Face.front; } }
+	public void flip() { if(face.equals(Face.front)) { face = Face.back; } else { face = Face.front; } }
+	public void flipCard() {
+		initScaleX = getScaleX();
+		addAction( sequence(scaleTo(0f,getScaleY(), 0.15f), 
+				new Action() {
+					@Override
+					public boolean act( float delta ){
+						flip();
+						return true;
+					}					
+		}, scaleTo(initScaleX, getScaleY(), 0.15f)));
+	}
 	
 	public Type getType() { return type; }
-	
 
 }
