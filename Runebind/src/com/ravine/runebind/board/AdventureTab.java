@@ -8,8 +8,8 @@ import com.ravine.runebind.RuneBind;
 
 public class AdventureTab extends Pullout {
 
-	public AdventureTab(float x, float y) {
-		super(Location.top, 1536, 256, x, y);
+	public AdventureTab(float y) {
+		super(Location.top, 1536, 256, (float) 0, y);
 		this.addListener(new InputListener() {
 			private float oldX;
 			@Override

@@ -38,7 +38,7 @@ public final class GameScreen extends AbstractScreen {
 				}
 				if(keycode == Input.Keys.LEFT) {
 					board.translate(5, 0);
-					Gdx.app.log(RuneBind.LOG, "Camera Left");;
+					Gdx.app.log(RuneBind.LOG, "Camera Left");
 				}
 				if(keycode == Input.Keys.RIGHT) {
 					board.translate(-5, 0);
@@ -61,9 +61,9 @@ public final class GameScreen extends AbstractScreen {
 			}
 		});
 		//Gdx.input.setInputProcessor(defaultControl);
-		adventureTab = new AdventureTab(0, stage.getHeight());
-		playerTab = new PlayerTab(0, 0);
-		marketTab = new MarketTab(0, 0);
+		adventureTab = new AdventureTab(stage.getHeight());
+		playerTab = new PlayerTab();
+		marketTab = new MarketTab();
 		questTab = new QuestTab(stage.getWidth(), 0);
 	}
 	
