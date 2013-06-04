@@ -130,7 +130,9 @@ public class GameBoard extends Group{
 			}
 		}
 	}
-	
+
+    public BoardTile getTile(int x, int y) { return tiles[(y*14)+x]; }
+
 	private void registerNeighbors() {
 		for(int i = 0; i < tiles.length; i++) {
 			BoardTile[] curNeigh = new BoardTile[6];

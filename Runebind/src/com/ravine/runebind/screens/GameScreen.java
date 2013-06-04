@@ -7,6 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.ravine.runebind.RuneBind;
 import com.ravine.runebind.board.*;
 import com.ravine.runebind.cards.ItemCard;
+import com.ravine.runebind.entity.Player;
+
+import java.util.ArrayList;
 
 public final class GameScreen extends AbstractScreen {
 	
@@ -15,7 +18,8 @@ public final class GameScreen extends AbstractScreen {
 	private MarketTab marketTab;
 	private AdventureTab adventureTab;
 	private QuestTab questTab;
-	private ItemCard testCard;
+    private ArrayList<Player> playerArrayList;
+    private Player player1;
 	//private BoardController boardController;
 	//private InputMultiplexer inputM;
 
@@ -23,7 +27,6 @@ public final class GameScreen extends AbstractScreen {
 	public GameScreen(RuneBind game) {
 		super(game);
 		board = new GameBoard("data/Map.txt");
-		testCard = new ItemCard(0);
 		//boardController = new BoardController(board);
 		stage.addListener(new InputListener() {
 			@Override
@@ -50,7 +53,7 @@ public final class GameScreen extends AbstractScreen {
 					Gdx.app.log(RuneBind.LOG, "zoom++");
 				}
 				if(keycode == Input.Keys.F) {
-					testCard.flipCard();
+
 				}
 				if(keycode == Input.Keys.Z && zoom < 3.0) {
 					//zoom += .1f;
@@ -65,6 +68,7 @@ public final class GameScreen extends AbstractScreen {
 		playerTab = new PlayerTab();
 		marketTab = new MarketTab();
 		questTab = new QuestTab(stage.getWidth(), 0);
+        player1 = new Player("Varikas the Dead", 4, 4, 0, 0, 1, board);
 	}
 	
 	public GameBoard getBoard() { return board; }
@@ -72,17 +76,23 @@ public final class GameScreen extends AbstractScreen {
 	@Override
 	public void show() {
 		super.show();
+
 		stage.addActor(board);	
 		stage.addActor(adventureTab);
 		stage.addActor(playerTab);
 		stage.addActor(marketTab);
 		stage.addActor(questTab);
-		stage.addActor(testCard);
 		adventureTab.addToStage();
 		playerTab.addToStage();
 		marketTab.addToStage();
 		questTab.addToStage();
+        stage.addActor(player1);
+        /*for(Player cur: playerArrayList) {
+            stage.addActor(cur);
+        }*/
 	}
+
+
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);

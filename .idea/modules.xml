@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/CardBuilder/CardBuilder.iml" filepath="$PROJECT_DIR$/CardBuilder/CardBuilder.iml" />
       <module fileurl="file://$PROJECT_DIR$/Runebind/Runebind.iml" filepath="$PROJECT_DIR$/Runebind/Runebind.iml" />
       <module fileurl="file://$PROJECT_DIR$/Runebind-android/Runebind-android.iml" filepath="$PROJECT_DIR$/Runebind-android/Runebind-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/Runebind-desktop/Runebind-desktop.iml" filepath="$PROJECT_DIR$/Runebind-desktop/Runebind-desktop.iml" />

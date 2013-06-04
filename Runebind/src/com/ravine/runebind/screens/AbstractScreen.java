@@ -48,7 +48,7 @@ public abstract class AbstractScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		float aspectRatio = (float)width/(float)height;
-        float scale = 1f;
+        float scale = 1;
         Vector2 crop = new Vector2(0f, 0f);
         
         if(aspectRatio > vAspect)

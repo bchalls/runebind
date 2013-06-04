@@ -13,6 +13,8 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import java.util.ArrayList;
+
 public class Card extends Actor {
 	
 	public static enum Type {
@@ -32,12 +34,13 @@ public class Card extends Actor {
 	protected TextureRegion cardFrontR, cardBackR, contentR;
 	protected BitmapFont font;
 	protected BitmapFontCache staticText;
-	protected String cardText;
+	protected String cardText, name;
 	protected Face face;
 	protected Vector2[] textTargets;
 	private float initScaleX;
+    protected ArrayList<Effect> effectList;
 	
-	public Card(Type type, int x, int y, String text) {
+	public Card(Type type, int x, int y, String text, String name) {
 		this.type = type;
 		face = Face.back;
 		setX(x);
@@ -46,8 +49,14 @@ public class Card extends Actor {
 		staticText = new BitmapFontCache(font);
 		cardText = text;
 		initScaleX = getScaleX();
+        this.name = name;
+        effectList = new ArrayList<Effect>();
 	}
-	
+
+    public void addEffect(Effect effect) {
+        effectList.add(effect);
+    }
+
 	public Face getFace() { return face; }
 	public void flip() { if(face.equals(Face.front)) { face = Face.back; } else { face = Face.front; } }
 	public void flipCard() {

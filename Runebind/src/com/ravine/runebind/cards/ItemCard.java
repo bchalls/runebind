@@ -14,8 +14,8 @@ public class ItemCard extends Card {
 	private int value;
 	
 
-	public ItemCard(int actType) {
-		super(Type.item, 100, 20, "");
+	public ItemCard(int actType, String name, String cardText) {
+		super(Type.item, 100, 20, cardText, name);
 		activationType = actType;
 		Texture tex = new Texture(Gdx.files.internal("data/MarketCardBack.png"));
 		cardBackR = new TextureRegion(tex, 0, 0, 322, 500);

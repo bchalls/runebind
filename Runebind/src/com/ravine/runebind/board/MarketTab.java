@@ -5,11 +5,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.ravine.runebind.RuneBind;
+import com.ravine.runebind.cards.Card;
+import com.ravine.runebind.cards.Effect;
+import com.ravine.runebind.cards.ItemCard;
+
+import java.util.ArrayList;
 
 public class MarketTab extends Pullout {
 
+    private ArrayList<Card> cardList;
+
 	public MarketTab() {
 		super(Location.left, 304, 3264, -304, 0);
+        cardList = new ArrayList<Card>();
+        cardList.add(new ItemCard(1, "Potion of Healing", "Before moving, discard to discard up to 2(H) from either your Hero or an Ally"));
+        Effect effect = new Effect(Effect.Timing.before, Effect.Activation.move);
+        effect.setDiscardDmg(2);
+        cardList.get(0).addEffect(effect);
 		this.addListener(new InputListener() {
 			private float oldY;
 			@Override
