@@ -7,6 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.ravine.runebind.RuneBind;
 import com.ravine.runebind.board.BoardTile.TileType;
+import com.ravine.runebind.entity.Player;
+
+import java.util.ArrayList;
 
 public class GameBoard extends Group{
 
@@ -15,6 +18,8 @@ public class GameBoard extends Group{
 	private boolean flinging;
 	private Step step;
 	private float width = 0, height = 0;
+    private ArrayList<Player> playerArrayList;
+    private Player player1;
 	
 	public enum Step {
 		movement,
@@ -75,14 +80,22 @@ public class GameBoard extends Group{
 				checkBounds();
 			}
 		});
+
+        player1 = new Player("player1", 4, 4, 0, 0, 1, getTile(0,0), this);
+        this.addActor(player1);
 	}
+
+    public void movePlayer(BoardTile tile)
+    {
+        player1.movePlayerTo(tile);
+    }
 
 	private void setUpBoard(String levelFile) {
 		FileHandle board = Gdx.files.internal(levelFile);
 		String[] lines = board.readString().split("\n");
-		int curTile = 0;
-		int yOffset = 0;
-		int curLevel = 0, offset = 0;
+		int curTile;
+		int yOffset;
+		int curLevel = 0, offset;
 		TileType curType = TileType.plains;
 		
 		for(int x = 0; x < lines.length; x++) {

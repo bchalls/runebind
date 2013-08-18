@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.ravine.runebind.board.BoardTile;
 import com.ravine.runebind.board.GameBoard;
 
 
@@ -19,8 +22,9 @@ public class Player extends Actor{
     private int playerNumber;
     private GameBoard board;
     private int gold;
+    private BoardTile tileOn;
 
-    public Player(String name, int hp, int fat, int portX, int portY, int playerNumber, GameBoard board) {
+    public Player(String name, int hp, int fat, int portX, int portY, int playerNumber, BoardTile startTile, GameBoard board) {
         characterName = name;
         this.board = board;
         curExp = 0;
@@ -35,19 +39,32 @@ public class Player extends Actor{
         portraitR = new TextureRegion(tex, portX*256, portY*256, 256, 256);
         tex = new Texture(Gdx.files.internal("data/playerTokens.png"));
         tokenR = new TextureRegion(tex, portX*64, portY*64, 64, 64);
-        tokenPosX = 0; tokenPosY = 0;
-        tokenX = board.getTile(tokenPosX, tokenPosY).getX();
-        tokenY = board.getTile(tokenPosX, tokenPosY).getY();
+        tileOn = startTile;
+        tileOn.addPlayer(this);
+        tokenX = tileOn.getX();
+        tokenY = tileOn.getY();
+        setPosition(tokenX +16, tokenY + 16);
+    }
+
+    public void movePlayerTo(BoardTile tile)
+    {
+        tileOn.removePlayer(this);
+        tileOn = tile;
+        tile.addPlayer(this);
+        tokenX = tileOn.getX();
+        tokenY = tileOn.getY();
+
+        addAction(moveTo(tokenX + 16, tokenY + 16, 0.275f));
+
+
     }
 
     public void draw(SpriteBatch batch, float parentAlpha) {
-            batch.draw(tokenR,tokenX + 16, tokenY + 16);
+            batch.draw(tokenR, getX(), getY());
     }
 
     public void act(float delta) {
         super.act(delta);
-        tokenX = board.getTile(tokenPosX, tokenPosY).getX();
-        tokenY = board.getTile(tokenPosX, tokenPosY).getY();
     }
 
     public String getCharacterName() {

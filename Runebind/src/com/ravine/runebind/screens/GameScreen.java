@@ -18,8 +18,6 @@ public final class GameScreen extends AbstractScreen {
 	private MarketTab marketTab;
 	private AdventureTab adventureTab;
 	private QuestTab questTab;
-    private ArrayList<Player> playerArrayList;
-    private Player player1;
 	//private BoardController boardController;
 	//private InputMultiplexer inputM;
 
@@ -68,7 +66,6 @@ public final class GameScreen extends AbstractScreen {
 		playerTab = new PlayerTab();
 		marketTab = new MarketTab();
 		questTab = new QuestTab(stage.getWidth(), 0);
-        player1 = new Player("Varikas the Dead", 4, 4, 0, 0, 1, board);
 	}
 	
 	public GameBoard getBoard() { return board; }
@@ -86,7 +83,6 @@ public final class GameScreen extends AbstractScreen {
 		playerTab.addToStage();
 		marketTab.addToStage();
 		questTab.addToStage();
-        stage.addActor(player1);
         /*for(Player cur: playerArrayList) {
             stage.addActor(cur);
         }*/

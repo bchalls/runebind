@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.ravine.runebind.RuneBind;
+import com.ravine.runebind.entity.Player;
+
+import java.util.ArrayList;
 
 public class BoardTile extends Actor {
 	
@@ -34,6 +37,7 @@ public class BoardTile extends Actor {
 	private int posX, posY;
 	private BoardTile[] neighbors;
 	private boolean lite;
+    private ArrayList<Player> players;
 	
 	public BoardTile(TileType type, float x, float y, int advLevel, int pX, int pY)
 	{
@@ -51,6 +55,8 @@ public class BoardTile extends Actor {
 		
 		posX = pX;
 		posY = pY;
+
+        players  = new ArrayList<Player>();
 		
 		//Vector2[] vecList = {new Vector2(0f,24f),new Vector2(0f,72f),new Vector2(48f,96f),
 		//		new Vector2(96f,72f),new Vector2(96f,24f),new Vector2(48f,0f)}; 
@@ -121,7 +127,8 @@ public class BoardTile extends Actor {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				Gdx.app.log(RuneBind.LOG, "Tile Up");
-				toggleLight();	
+				toggleLight();
+                ((GameBoard) getParent()).movePlayer(get());
 				for(int i = 0; i < neighbors.length; i++) {
 					if(neighbors[i] != null) {
 						neighbors[i].toggleLight();
@@ -131,6 +138,15 @@ public class BoardTile extends Actor {
 			
 		});
 	}
+
+    public void addPlayer(Player player)
+    {
+        players.add(player);
+    }
+    public void removePlayer(Player player)
+    {
+        players.remove(player);
+    }
 
 	@Override
 	public Actor hit(float x, float y, boolean touchable) {
@@ -153,7 +169,12 @@ public class BoardTile extends Actor {
 		}
 		lite = !lite;
 	}
-	
+
+    private BoardTile get()
+    {
+        return  this;
+    }
+
 	public int getPosX() { return posX; }
 	public int getPosY() { return posY; }
 	
