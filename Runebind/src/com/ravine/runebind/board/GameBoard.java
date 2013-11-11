@@ -81,10 +81,11 @@ public class GameBoard extends Group{
 			}
 		});
 
-        player1 = new Player("player1", 4, 4, 0, 0, 1, getTile(0,0), this);
+        player1 = new Player("player1", 1, this);
         this.addActor(player1);
 	}
 
+    //Test function, will need  change
     public void movePlayer(BoardTile tile)
     {
         player1.movePlayerTo(tile);

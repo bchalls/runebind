@@ -9,6 +9,10 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.ravine.runebind.board.BoardTile;
 import com.ravine.runebind.board.GameBoard;
+import com.ravine.runebind.cards.Card;
+import com.ravine.runebind.cards.ItemCard;
+
+import java.util.ArrayList;
 
 
 public class Player extends Actor{
@@ -23,23 +27,30 @@ public class Player extends Actor{
     private GameBoard board;
     private int gold;
     private BoardTile tileOn;
+    private ArrayList<ItemCard> itemCards;
+    private ArrayList<Card> allyCards; // TODO: change Card to AllyCard
 
-    public Player(String name, int hp, int fat, int portX, int portY, int playerNumber, BoardTile startTile, GameBoard board) {
+    /*
+        Info such as hp, fat, and the portrait position will be based on the picked character
+     */
+    public Player(String name, int playerNumber, GameBoard board) {
         characterName = name;
         this.board = board;
         curExp = 0;
-        maxHP = hp;
+        maxHP = 4;
         curDmg = 0;
-        maxFat = fat;
+        maxFat = 4;
         curFat = 0;
         gold = 3;
+        int portX = 0;
+        int portY = 0;
         sJump = 0; sSneak = 0; sSwim = 0; sClimb = 0; sDiplomacy = 0; sResist = 0; sHide = 0; sTinker = 0;
         this.playerNumber = playerNumber;
         Texture tex = new Texture(Gdx.files.internal("data/portraits.png"));
         portraitR = new TextureRegion(tex, portX*256, portY*256, 256, 256);
         tex = new Texture(Gdx.files.internal("data/playerTokens.png"));
         tokenR = new TextureRegion(tex, portX*64, portY*64, 64, 64);
-        tileOn = startTile;
+        tileOn = board.getTile(0,0);
         tileOn.addPlayer(this);
         tokenX = tileOn.getX();
         tokenY = tileOn.getY();

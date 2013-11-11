@@ -36,6 +36,6 @@ public class MovementDie extends Die {
 
     @Override
     public void setNumSides(int numSides) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        this.numSides = numSides;
     }
 }
