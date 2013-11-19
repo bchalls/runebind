@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.ravine.runebind.RuneBind;
 import com.ravine.runebind.board.BoardTile;
 import com.ravine.runebind.board.GameBoard;
 import com.ravine.runebind.cards.Card;
@@ -27,8 +28,8 @@ public class Player extends Actor{
     private GameBoard board;
     private int gold;
     private BoardTile tileOn;
-    private ArrayList<ItemCard> itemCards;
-    private ArrayList<Card> allyCards; // TODO: change Card to AllyCard
+    private boolean turnOver;
+    private ArrayList<Card> cardArrayList; // TODO: cards will be handled based on .class.equals
 
     /*
         Info such as hp, fat, and the portrait position will be based on the picked character
@@ -55,6 +56,8 @@ public class Player extends Actor{
         tokenX = tileOn.getX();
         tokenY = tileOn.getY();
         setPosition(tokenX +16, tokenY + 16);
+        cardArrayList = new ArrayList<Card>();
+        turnOver = false;
     }
 
     public void movePlayerTo(BoardTile tile)
@@ -68,6 +71,28 @@ public class Player extends Actor{
         addAction(moveTo(tokenX + 16, tokenY + 16, 0.275f));
 
 
+    }
+
+    public void addCard(Card card) {
+        cardArrayList.add(card);
+    }
+    public void removeCard(Card card) {
+        if(!cardArrayList.remove(card))
+            Gdx.app.log(RuneBind.LOG,"Card, " + card.toString() + " not in player " + playerNumber + "'s hand.");
+    }
+
+    public void refreshCards() {
+        for(Card c : cardArrayList) {
+            c.refresh();
+        }
+    }
+
+    public boolean isTurnOver() {
+        return turnOver;
+    }
+
+    public void setTurnOver(boolean turnOver) {
+        this.turnOver = turnOver;
     }
 
     public void draw(SpriteBatch batch, float parentAlpha) {

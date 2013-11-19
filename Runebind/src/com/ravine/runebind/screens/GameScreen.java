@@ -8,6 +8,7 @@ import com.ravine.runebind.RuneBind;
 import com.ravine.runebind.board.*;
 import com.ravine.runebind.cards.ItemCard;
 import com.ravine.runebind.entity.Player;
+import com.ravine.runebind.turn.TurnManager;
 
 import java.util.ArrayList;
 
@@ -69,6 +70,11 @@ public final class GameScreen extends AbstractScreen {
 	}
 	
 	public GameBoard getBoard() { return board; }
+
+   /* @Override
+    public void render(float delta) {
+        super.render(delta);
+    } */
 	
 	@Override
 	public void show() {

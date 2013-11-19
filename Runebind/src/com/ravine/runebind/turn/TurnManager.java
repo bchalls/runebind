@@ -1,5 +1,7 @@
 package com.ravine.runebind.turn;
 
+import com.badlogic.gdx.Gdx;
+import com.ravine.runebind.RuneBind;
 import com.ravine.runebind.board.GameBoard;
 import com.ravine.runebind.entity.Player;
 
@@ -30,11 +32,24 @@ public class TurnManager {
     public TurnManager(GameBoard board) {
         this.board = board;
         curStep = Step.refresh;
+        playerList = new ArrayList<Player>();
 
     }
 
-    public void addPlayer(String characterName) {
-        playerList.add(new Player(characterName, playerList.size()+1, board));
+    public void addPlayer(Player p) {
+        playerList.add(p);
+        Gdx.app.log(RuneBind.LOG, "Adding player: " + p.getName());
+        if(playerList.size() == 1) {
+            curPlayer = playerList.get(0);
+        }
+    }
+
+    public Step getCurStep() {
+        return  curStep;
+    }
+
+    public Player getCurPlayer() {
+        return curPlayer;
     }
 
 
@@ -52,11 +67,28 @@ public class TurnManager {
         Market - marketDeck*Town.push(marketDeckAll.pop) board.showMarketOptions
          buy item/ally: show current towns market cards. card.clicked? player.confirmBuy? playerHand.add(Card)
          sell card: player.showHand card.clicked? player.confirmSell
-         heal: slider to select amount min(wounds,gold)
+         heal: slider to select amount 0 - min(wounds,gold)
         Experience - if player has correct amount of experience needed for the number
          of players, show options for level up
      */
     public void handleStep() {
+        switch (curStep) {
+            case refresh:
+                Gdx.app.log(RuneBind.LOG, "Starting refresh step");
+                curPlayer.refreshCards();
+                curStep = Step.movement;
+                Gdx.app.log(RuneBind.LOG, "Starting movement step");
+                break;
+            case movement:
+
+                break;
+            case adventure:
+                break;
+            case market:
+                break;
+            case experience:
+                break;
+        }
 
     }
 

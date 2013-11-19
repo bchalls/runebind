@@ -7,7 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.ravine.runebind.RuneBind;
 import com.ravine.runebind.board.BoardTile.TileType;
+import com.ravine.runebind.dice.MovementDie;
 import com.ravine.runebind.entity.Player;
+import com.ravine.runebind.turn.TurnManager;
+import com.ravine.runebind.turn.TurnManager.Step;
 
 import java.util.ArrayList;
 
@@ -16,21 +19,13 @@ public class GameBoard extends Group{
 	private BoardTile tiles[];
 	private float velX, velY;
 	private boolean flinging;
-	private Step step;
 	private float width = 0, height = 0;
+    private TurnManager turnManager;
+
     private ArrayList<Player> playerArrayList;
-    private Player player1;
-	
-	public enum Step {
-		movement,
-		adventure,
-		market,
-		experience
-	};
-	
-	public GameBoard( String levelFile) {				
-		step = Step.movement;
-		
+
+
+    public GameBoard( String levelFile) {
 		flinging = false;
 		velX = 0.0f;
 		velY = 0.0f;
@@ -62,33 +57,65 @@ public class GameBoard extends Group{
 			@Override
 			public void touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				flinging = false;
-				if(!step.equals(Step.movement))
-					event.stop();
+
 			}
 			@Override
 			public void fling(InputEvent event, float velocityX, float velocityY, int button) {
-				if(Math.abs(velocityX) > 50.0f || Math.abs(velocityY) > 50.0f) {
-					flinging = true;
-					velX = velocityX;
-					velY = velocityY;
-					Gdx.app.log(RuneBind.LOG, "velX: " + velX + ", velY: " + velY);
-				}
+                if(!(turnManager.getCurStep().equals(Step.movement)))
+                    event.stop();
+                else {
+                    if(Math.abs(velocityX) > 50.0f || Math.abs(velocityY) > 50.0f) {
+                        flinging = true;
+                        velX = velocityX;
+                        velY = velocityY;
+                        Gdx.app.log(RuneBind.LOG, "velX: " + velX + ", velY: " + velY);
+                    }
+                }
 			}
 			@Override
 			public void pan(InputEvent event, float x, float y, float deltaX, float deltaY) {
-				translate(deltaX, deltaY);
-				checkBounds();
+                if(!(turnManager.getCurStep().equals(Step.movement)))
+                    event.stop();
+                else {
+                    translate(deltaX, deltaY);
+                    checkBounds();
+                }
 			}
 		});
 
-        player1 = new Player("player1", 1, this);
-        this.addActor(player1);
+        playerArrayList = new ArrayList<Player>();
+        Player tempPlayer = new Player("player1", 1, this);
+        playerArrayList.add(tempPlayer);
+        this.addActor(playerArrayList.get(playerArrayList.size()-1));
+
+        turnManager = new TurnManager(this);
+        for(Player p : playerArrayList)
+            turnManager.addPlayer(p);
 	}
 
+    private ArrayList<MovementDie> testMethod() {
+        ArrayList<MovementDie> dieList = new ArrayList<MovementDie>();
+        dieList.add(new MovementDie());
+        dieList.add(new MovementDie());
+        dieList.add(new MovementDie());
+        dieList.add(new MovementDie());
+        return dieList;
+
+    }
+
     //Test function, will need  change
-    public void movePlayer(BoardTile tile)
+    public void movePlayer(Player player, BoardTile tile)
     {
-        player1.movePlayerTo(tile);
+        player.movePlayerTo(tile);
+        tile.makePath(testMethod());
+    }
+
+    public TurnManager getTurnManager() {
+        return turnManager;
+    }
+
+    public Player getCurPlayer() {
+        return turnManager.getCurPlayer();
     }
 
 	private void setUpBoard(String levelFile) {
@@ -241,6 +268,9 @@ public class GameBoard extends Group{
 		if(getX() < (getStage().getWidth()-(getWidth()*getScaleX()))) setX(getStage().getWidth()-(getWidth()*getScaleX()));
 		if(getY() < (getStage().getHeight()-(getHeight()*getScaleY()))) setY(getStage().getHeight()-(getHeight()*getScaleY()));
 	}
+    public ArrayList<Player> getPlayerArrayList() {
+        return playerArrayList;
+    }
 	
 	@Override
 	public void act(float delta) {
@@ -253,6 +283,7 @@ public class GameBoard extends Group{
 			if(Math.abs(velY) < 0.01f) velY = 0;
 			//if( velX == 0 && velY == 0) flinging = false;
 		}
+        turnManager.handleStep();
 		checkBounds();
 	}
 }

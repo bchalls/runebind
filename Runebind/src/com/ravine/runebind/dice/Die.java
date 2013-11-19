@@ -22,6 +22,9 @@ public abstract class Die {
 
     public abstract int roll();
     public abstract void setNumSides(int numSides);
+    public void setCurSide(int side) {
+        curSide = side;
+    }
 
 
 }

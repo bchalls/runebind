@@ -11,9 +11,30 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.ravine.runebind.RuneBind;
+import com.ravine.runebind.dice.MovementDie;
 import com.ravine.runebind.entity.Player;
+import com.ravine.runebind.turn.TurnManager.Step;
 
 import java.util.ArrayList;
+
+/*
+TODO: make a blue line for "through" tile path and a dot for "end" path
+TODO: make path algorithm:
+            board will get list of dice from dice manager
+            board will send listDice to curPlayer.curTile
+            for each die
+                for each neighbor
+                    tileType = dieType
+                        add die to "used" queue/list
+                        remove from listDice
+                        highlight tile
+                        if new list not empty then "through" else "end"
+                        send new listDice to foundTile
+                            for each die ... etc
+
+
+
+ */
 
 public class BoardTile extends Actor {
 	
@@ -114,12 +135,12 @@ public class BoardTile extends Actor {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				if(pointer == 0) {
 					Gdx.app.log(RuneBind.LOG, "Tile down. pX: " + posX + ", pY: " + posY);
-					toggleLight();
+					/*toggleLight();
 					for(int i = 0; i < neighbors.length; i++) {
 						if(neighbors[i] != null) {
 							neighbors[i].toggleLight();
 						}
-					}
+					} */
 					return true;
 				}
 				return false;
@@ -127,13 +148,18 @@ public class BoardTile extends Actor {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				Gdx.app.log(RuneBind.LOG, "Tile Up");
-				toggleLight();
-                ((GameBoard) getParent()).movePlayer(get());
+
+                if(((GameBoard) getParent()).getTurnManager().getCurStep().equals(Step.movement))
+                {
+                    //if(lite)
+                        ((GameBoard) getParent()).movePlayer(((GameBoard) getParent()).getCurPlayer(),get());
+                }
+                /*toggleLight();
 				for(int i = 0; i < neighbors.length; i++) {
 					if(neighbors[i] != null) {
 						neighbors[i].toggleLight();
 					}
-				}
+				}  */
 			}
 			
 		});
@@ -160,6 +186,10 @@ public class BoardTile extends Actor {
 	public void setNeighbors(BoardTile[] neighbors) {
 		this.neighbors = neighbors;
 	}
+
+    public BoardTile[] getNeighbors() {
+        return neighbors;
+    }
 	
 	public void toggleLight() {
 		if(lite) {
@@ -175,6 +205,10 @@ public class BoardTile extends Actor {
         return  this;
     }
 
+    public TileType getType() {
+        return type;
+    }
+
 	public int getPosX() { return posX; }
 	public int getPosY() { return posY; }
 	
@@ -187,5 +221,38 @@ public class BoardTile extends Actor {
 			batch.draw(adventureRegion, getX()+16, getY()+16);
 		}
 	}
+ /*
+    board will get list of dice from dice manager
+    board will send listDice to curPlayer.curTile
+    for each die
+        for each typeOnDie
+            for each neighbor
+                tileType = curType
+                    add die to "used" queue/list
+                    remove from listDice
+                    highlight tile
+                    if new list not empty then "through" else "end"
+                    send new listDice to foundTile
+                    for each die ... etc
+    */
+    public void makePath(ArrayList<MovementDie> diceList) {
+        ArrayList<MovementDie> usedDice = new ArrayList<MovementDie>();
+        ArrayList<MovementDie> newList = new ArrayList<MovementDie>();
+        for(MovementDie die : diceList) {
+            for(TileType t : die.getCurSideTypes()) {
+                for(BoardTile tile : getNeighbors())
+                    if(tile != null) {
+                        if(tile.getType().equals(t) || tile.getType().equals(TileType.town)) {
+                            usedDice.add(die);
+                            newList.remove(die);
+                            tile.toggleLight();
+                            tile.makePath(newList);
+                        }
+                    }
+            }
+        }
+
+
+    }
 	
 }

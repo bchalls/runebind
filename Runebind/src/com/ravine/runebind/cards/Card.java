@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
@@ -36,6 +37,7 @@ public class Card extends Actor {
 	protected BitmapFontCache staticText;
 	protected String cardText, name;
 	protected Face face;
+    protected boolean activated;
 	protected Vector2[] textTargets;
 	private float initScaleX;
     protected ArrayList<Effect> effectList;
@@ -51,6 +53,7 @@ public class Card extends Actor {
 		initScaleX = getScaleX();
         this.name = name;
         effectList = new ArrayList<Effect>();
+        activated = false;
 	}
 
     public void addEffect(Effect effect) {
@@ -72,5 +75,12 @@ public class Card extends Actor {
 	}
 	
 	public Type getType() { return type; }
+
+    public void refresh() { activated = false; }
+
+    @Override
+    public String toString() {
+        return (name + " of " + type.toString() + "type");
+    }
 
 }
