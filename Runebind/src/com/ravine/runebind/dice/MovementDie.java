@@ -31,27 +31,31 @@ public class MovementDie extends Die {
         rand = new Random(System.nanoTime());
         curSide = rand.nextInt(6);
         terrainTypes = new ArrayList<List<TileType>>();
+        terrainTypes.add(new ArrayList<TileType>());
+        terrainTypes.add(new ArrayList<TileType>());
+        terrainTypes.add(new ArrayList<TileType>());
+        terrainTypes.add(new ArrayList<TileType>());
+        terrainTypes.add(new ArrayList<TileType>());
+        terrainTypes.add(new ArrayList<TileType>());
         addSides();
     }
 
     private void addSides() {
-        for(List<TileType> i : terrainTypes)
-            i = new ArrayList<TileType>();
         terrainTypes.get(0).add(TileType.river);
         terrainTypes.get(0).add(TileType.road);
-        terrainTypes[1].add(TileType.mountains);
-        terrainTypes[1].add(TileType.road);
-        terrainTypes[1].add(TileType.plains);
-        terrainTypes[2].add(TileType.hills);
-        terrainTypes[2].add(TileType.plains);
-        terrainTypes[2].add(TileType.road);
-        terrainTypes[3].add(TileType.hills);
-        terrainTypes[3].add(TileType.plains);
-        terrainTypes[3].add(TileType.road);
-        terrainTypes[4].add(TileType.river);
-        terrainTypes[4].add(TileType.forest);
-        terrainTypes[5].add(TileType.river);
-        terrainTypes[5].add(TileType.swamp);
+        terrainTypes.get(1).add(TileType.mountains);
+        terrainTypes.get(1).add(TileType.road);
+        terrainTypes.get(1).add(TileType.plains);
+        terrainTypes.get(2).add(TileType.hills);
+        terrainTypes.get(2).add(TileType.plains);
+        terrainTypes.get(2).add(TileType.road);
+        terrainTypes.get(3).add(TileType.hills);
+        terrainTypes.get(3).add(TileType.plains);
+        terrainTypes.get(3).add(TileType.road);
+        terrainTypes.get(4).add(TileType.river);
+        terrainTypes.get(4).add(TileType.forest);
+        terrainTypes.get(5).add(TileType.river);
+        terrainTypes.get(5).add(TileType.swamp);
     }
 
     @Override
@@ -62,7 +66,12 @@ public class MovementDie extends Die {
     }
 
     public ArrayList<TileType> getCurSideTypes() {
-        return terrainTypes[curSide];
+        return (ArrayList<TileType>) terrainTypes.get(curSide);
+    }
+
+    @Override
+    public String toString() {
+        return "Current side: " + curSide + ", Types: " + terrainTypes.get(curSide);
     }
 
     @Override

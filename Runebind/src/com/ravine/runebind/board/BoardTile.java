@@ -151,8 +151,11 @@ public class BoardTile extends Actor {
 
                 if(((GameBoard) getParent()).getTurnManager().getCurStep().equals(Step.movement))
                 {
-                    //if(lite)
+                    if(lite) {
+                        ((GameBoard) getParent()).clearBoardHighlight();
                         ((GameBoard) getParent()).movePlayer(((GameBoard) getParent()).getCurPlayer(),get());
+                    }
+
                 }
                 /*toggleLight();
 				for(int i = 0; i < neighbors.length; i++) {
@@ -200,6 +203,15 @@ public class BoardTile extends Actor {
 		lite = !lite;
 	}
 
+    public void setLight(boolean tf) {
+        lite = tf;
+        if(lite) {
+            hexRegion = hexRLight;
+        } else {
+            hexRegion = hexRDark;
+        }
+    }
+
     private BoardTile get()
     {
         return  this;
@@ -235,18 +247,18 @@ public class BoardTile extends Actor {
                     send new listDice to foundTile
                     for each die ... etc
     */
-    public void makePath(ArrayList<MovementDie> diceList) {
+    public void makePath(ArrayList<MovementDie> diceList, BoardTile startTile) {
         ArrayList<MovementDie> usedDice = new ArrayList<MovementDie>();
-        ArrayList<MovementDie> newList = new ArrayList<MovementDie>();
+        ArrayList<MovementDie> newList = new ArrayList<MovementDie>(diceList);
         for(MovementDie die : diceList) {
             for(TileType t : die.getCurSideTypes()) {
                 for(BoardTile tile : getNeighbors())
-                    if(tile != null) {
+                    if(tile != null && !tile.equals(startTile)) {
                         if(tile.getType().equals(t) || tile.getType().equals(TileType.town)) {
                             usedDice.add(die);
                             newList.remove(die);
-                            tile.toggleLight();
-                            tile.makePath(newList);
+                            tile.setLight(true);
+                            tile.makePath(newList, startTile);
                         }
                     }
             }

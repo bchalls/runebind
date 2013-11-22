@@ -78,9 +78,9 @@ public class TurnManager {
                 curPlayer.refreshCards();
                 curStep = Step.movement;
                 Gdx.app.log(RuneBind.LOG, "Starting movement step");
+                board.movePlayer(curPlayer, board.getTile(9, 7));
                 break;
             case movement:
-
                 break;
             case adventure:
                 break;

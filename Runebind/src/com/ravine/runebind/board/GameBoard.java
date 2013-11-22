@@ -93,21 +93,36 @@ public class GameBoard extends Group{
             turnManager.addPlayer(p);
 	}
 
-    private ArrayList<MovementDie> testMethod() {
+    public ArrayList<MovementDie> testMethod() {
         ArrayList<MovementDie> dieList = new ArrayList<MovementDie>();
         dieList.add(new MovementDie());
+        dieList.get(dieList.size()-1);
         dieList.add(new MovementDie());
+        dieList.get(dieList.size()-1);
         dieList.add(new MovementDie());
+        dieList.get(dieList.size()-1);
         dieList.add(new MovementDie());
+        dieList.get(dieList.size()-1);
+        dieList.add(new MovementDie());
+        dieList.get(dieList.size()-1);
+        for(MovementDie d : dieList) {
+            Gdx.app.log(RuneBind.LOG, d.toString());
+        }
         return dieList;
 
+    }
+
+    public void clearBoardHighlight() {
+        for(int i = 0; i < tiles.length; i++) {
+            tiles[i].setLight(false);
+        }
     }
 
     //Test function, will need  change
     public void movePlayer(Player player, BoardTile tile)
     {
         player.movePlayerTo(tile);
-        tile.makePath(testMethod());
+        tile.makePath(testMethod(), tile);
     }
 
     public TurnManager getTurnManager() {
