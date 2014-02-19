@@ -29,7 +29,25 @@ public class Player extends Actor{
     private int gold;
     private BoardTile tileOn;
     private boolean turnOver;
-    private ArrayList<Card> cardArrayList; // TODO: cards will be handled based on .class.equals
+    private ArrayList<Card> cardArrayList;
+
+    public ArrayList<Card> getActiveCardArrayList() {
+        return activeCardArrayList;
+    }
+
+    public void setActiveCardArrayList(ArrayList<Card> activeCardArrayList) {
+        this.activeCardArrayList = activeCardArrayList;
+    }
+
+    public ArrayList<Card> getCardArrayList() {
+        return cardArrayList;
+    }
+
+    public void setCardArrayList(ArrayList<Card> cardArrayList) {
+        this.cardArrayList = cardArrayList;
+    }
+
+    private ArrayList<Card> activeCardArrayList; // TODO: cards will be handled based on .class.equals
 
     /*
         Info such as hp, fat, and the portrait position will be based on the picked character
@@ -49,7 +67,7 @@ public class Player extends Actor{
         this.playerNumber = playerNumber;
         Texture tex = new Texture(Gdx.files.internal("data/portraits.png"));
         portraitR = new TextureRegion(tex, portX*256, portY*256, 256, 256);
-        tex = new Texture(Gdx.files.internal("data/playerTokens.png"));
+        tex = new Texture(Gdx.files.internal("data/PlayerTokens.png"));
         tokenR = new TextureRegion(tex, portX*64, portY*64, 64, 64);
         tileOn = board.getTile(0,0);
         tileOn.addPlayer(this);
@@ -57,6 +75,7 @@ public class Player extends Actor{
         tokenY = tileOn.getY();
         setPosition(tokenX +16, tokenY + 16);
         cardArrayList = new ArrayList<Card>();
+        activeCardArrayList = new ArrayList<Card>();
         turnOver = false;
     }
 
@@ -76,6 +95,16 @@ public class Player extends Actor{
     public void addCard(Card card) {
         cardArrayList.add(card);
     }
+
+    public void activateCard(Card card) {
+        if (cardArrayList.contains(card)) {
+            activeCardArrayList.add(card);
+            cardArrayList.remove(card);
+        } else {
+           Gdx.app.log(RuneBind.LOG, "Card: " + card.toString() + " not in requested player's hand");
+        }
+    }
+
     public void removeCard(Card card) {
         if(!cardArrayList.remove(card))
             Gdx.app.log(RuneBind.LOG,"Card, " + card.toString() + " not in player " + playerNumber + "'s hand.");

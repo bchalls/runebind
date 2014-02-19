@@ -298,6 +298,7 @@ public class GameBoard extends Group{
 			if(Math.abs(velY) < 0.01f) velY = 0;
 			//if( velX == 0 && velY == 0) flinging = false;
 		}
+        //TODO: Change to statemachine
         turnManager.handleStep();
 		checkBounds();
 	}

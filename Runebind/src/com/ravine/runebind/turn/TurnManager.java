@@ -29,6 +29,7 @@ public class TurnManager {
 
     private Step curStep;
 
+
     public TurnManager(GameBoard board) {
         this.board = board;
         curStep = Step.refresh;
@@ -71,6 +72,8 @@ public class TurnManager {
         Experience - if player has correct amount of experience needed for the number
          of players, show options for level up
      */
+    //TODO:Change from swap to statemachine**//Step handling done inside of each player
+    //TODO:Send current step to current player, check if player complete with current step, move to next player, if no next player go to next step
     public void handleStep() {
         switch (curStep) {
             case refresh:

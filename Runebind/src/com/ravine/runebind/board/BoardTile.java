@@ -246,6 +246,7 @@ public class BoardTile extends Actor {
                     if new list not empty then "through" else "end"
                     send new listDice to foundTile
                     for each die ... etc
+    TODO: temporarily store paths
     */
     public void makePath(ArrayList<MovementDie> diceList, BoardTile startTile) {
         ArrayList<MovementDie> usedDice = new ArrayList<MovementDie>();

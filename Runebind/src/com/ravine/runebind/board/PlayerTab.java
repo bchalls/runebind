@@ -5,8 +5,26 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.ravine.runebind.RuneBind;
+import com.ravine.runebind.cards.Card;
+import com.ravine.runebind.entity.Player;
+
+/**
+ * Player tab displays information pertaining to current player
+ * Health - draw(player.getHP.toString)
+ * Gold - draw(player.getGold.toString)
+ * Fatigue - draw(player.getFatigue.toString)
+ * Portrait - draw(player.getPortrait)
+ * Active Cards - drawable
+ * Available Cards - drawable
+ * Name - draw(player.getName.toString)
+ * Player number - draw(player.getNumber.toString)
+ */
 
 public class PlayerTab extends Pullout {
+
+    private Player curPlayer;
+    private Card activeCards, availableCards;
+    private String health, fatigue, gold, name, playerNum;
 
 	public PlayerTab() {
 		super(Location.bottom, 1024, 304, 0, -304);

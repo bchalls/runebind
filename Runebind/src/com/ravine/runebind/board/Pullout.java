@@ -41,7 +41,7 @@ public class Pullout extends Actor {
 	
 	public Pullout(Location location, int width, int height, float x, float y) {
 		super();
-		Texture pulloutTex = new Texture(Gdx.files.internal("data/pullout.png"));
+		Texture pulloutTex = new Texture(Gdx.files.internal("data/Pullout.png"));
 		Texture tabTex = new Texture(Gdx.files.internal("data/pullTab.png"));
 		loc = location;
 		this.w = width;
